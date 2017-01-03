@@ -1,1 +1,1 @@
-Simple bash script to change some VR Settings if you have bash environment installed in Windows 10
+This script uses jq and the windows 10 bash environment to modify steamvr.vrsettings file to change things like supersampling and revive hybrid grip mode.
