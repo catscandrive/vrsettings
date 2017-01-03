@@ -1,23 +1,25 @@
 file_loc="/mnt/c/Program Files (x86)/Steam/config/"
 cd "$file_loc"
-cp steamvr.vrsettings steamvr.vrsettings.old
+mult=$(jq .steamvr.renderTargetMultiplier steamvr.vrsettings)
+echo "Current Multiplier is :" $mult
+grip=$(jq .revive.ToggleGrip steamvr.vrsettings)
+echo "Current Toggle Grip setting is :" $grip
 
-echo "Select 1 to Change Multipler, 2 to Toggle Grip Setting"
+
+
+echo "Select 1 to Change Multipler, 2 to Toggle Grip Setting, Any other key to exit"
 read choice
 case "$choice" in
 	"1")
-	cur_val=$(jq '.steamvr.renderTargetMultiplier' steamvr.vrsettings) 
-	echo "Current render multiplier is $cur_val"
+	cp steamvr.vrsettings steamvr.vrsettings.old
 	echo "Enter a new render multiplier Value: "
 	read value
 	jq .steamvr.renderTargetMultiplier=$value steamvr.vrsettings | ex -sc 'wq!steamvr.vrsettings' /dev/stdin	
 	;;
 
 	"2")
-	cur_val=$(jq '.revive.ToggleGrip' steamvr.vrsettings)	
-	echo "Toggle Grip is Currently: $cur_val"
-	sleep 1
-	if [ $cur_val == "true" ]
+	cp steamvr.vrsettings steamvr.vrsettings.old
+	if [ $grip == "true" ]
 	then
 	echo "Setting Toggle Grip to False"
 	jq .revive.ToggleGrip=false steamvr.vrsettings | ex -sc 'wq!steamvr.vrsettings' /dev/stdin	
@@ -25,5 +27,9 @@ case "$choice" in
 	echo "Setting Toggle Grip to True"
 	jq .revive.ToggleGrip=true steamvr.vrsettings | ex -sc 'wq!steamvr.vrsettings' /dev/stdin	
 	fi
+	;;
+
+	*)
+	exit
 	;;
 esac	
